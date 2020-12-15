@@ -5,6 +5,7 @@
  */
 package photomosaic;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -15,10 +16,12 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.ImageView;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
@@ -26,6 +29,7 @@ import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
+import javax.imageio.ImageIO;
 
 /**
  *
@@ -263,8 +267,8 @@ public class FXMLDocumentController implements Initializable {
             calculateReason();
 
         }
-    }    
-    
+    }
+
     private void calculateReason() {
 
         int wmos = Integer.parseInt(mosWidth.getText());
@@ -285,46 +289,60 @@ public class FXMLDocumentController implements Initializable {
         int height = (int) Math.ceil(inputHeight / mScaleHeight);
 
         writableImage = new WritableImage(inputWidth, inputHeight);
-        PixelWriter pixelWriter = writableImage.getPixelWriter();
 
         for (int Q = 0; Q < height; Q++) {
             for (int P = 0; P < width; P++) {
-                Color color = getCorrespondingColor(P, Q, mScaleWidth, mScaleHeight);
+                writerImage(P, Q, mScaleWidth, mScaleHeight);
+            }
+        }
+        
+        imageView.setImage(writableImage);
 
+    }
+
+    private void writerImage(int P, int Q, int m, int n) {
+        int candidate = imageOriginal.getCandidates()[P][Q];
+        Image imageCandidate = new Image("file:" + "repositories/repository0/" + candidate + ".jpg");
+        Image scaled = scaleImage(imageCandidate, m, n);
+        PixelReader pixelReader = scaled.getPixelReader();
+        PixelWriter pixelWriter = writableImage.getPixelWriter();
+
+        for (int y = 0; y < n; y++) {
+            for (int x = 0; x < m; x++) {
+                Color color = pixelReader.getColor(x, y);
+                pixelWriter.setColor(x + (P * m), y + (Q * n), color);
+            }
+        }
+    }
+
+    private Image scaleImage(Image image, double mosX, double mosY) {
+        double zoomValueX = (double) mosX / (double) image.getWidth();
+        double zoomValueY = (double) mosY / (double) image.getHeight();
+
+        int width = (int) Math.round(image.getWidth() * zoomValueX);
+        int height = (int) Math.round(image.getHeight() * zoomValueY);
+
+        width = width > 0 ? width : 1;
+        height = height > 0 ? height : 1;
+
+        WritableImage scaleWritable = new WritableImage(width, height);
+        PixelWriter scaleWriter = scaleWritable.getPixelWriter();
+        PixelReader imageRepo = image.getPixelReader();
+
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                if (x < width && y < height) {
+                    int zX = (int) (x / zoomValueX);
+                    int zY = (int) (y / zoomValueY);
+                    Color zoomColor = imageRepo.getColor(zX, zY);
+                    scaleWriter.setColor(x, y, zoomColor);
+                }
             }
         }
 
-//        writeImage();        
+        return scaleWritable;
     }
 
-    private Color getCorrespondingColor(int P, int Q, int m, int n) {
-        return new Color(0, 0, 0, 1);
-//        for (int y = 0; y < inputHeight; y++) {
-//            for (int x = 0; x < inputWidth; x++) {
-//
-//            }
-//        }
-    }
-
-//    private void zoomNeighbor(double zoomValue) {
-//        int width = (int) Math.round(imageWidth * zoomValue);
-//        int height = (int) Math.round(imageHeight * zoomValue);
-//        width = width > 0 ? width : 1;
-//        height = height > 0 ? height : 1;
-//        Color[][] current = pic.getScaleMatrix();
-//        zoomWritable = new WritableImage(width, height);
-//        zoomWriter = zoomWritable.getPixelWriter();
-//        for (int y = 0; y < height; y++) {
-//            for (int x = 0; x < width; x++) {
-//                if (x < width && y < height) {
-//                    int zX = (int) (x / zoomValue);
-//                    int zY = (int) (y / zoomValue);
-//                    Color zoomColor = current[zX][zY];
-//                    zoomWriter.setColor(x, y, zoomColor);
-//                }
-//            }
-//        }
-//    }
     private void calculateCandidates(int width, int height) {
         int[][] candidateImg = new int[width][height];
         int candidate;
@@ -333,7 +351,7 @@ public class FXMLDocumentController implements Initializable {
             for (int P = 0; P < width; P++) {
                 candidate = findCandidate(imageOriginal.getWeightedAverage()[P][Q], new File("vectors/vector0.txt"));
                 candidateImg[P][Q] = candidate;
-                System.out.println(P + " " + Q + " " + "CANDIDATES: " + candidate);
+//                System.out.println(P + " " + Q + " " + "CANDIDATES: " + candidate);
             }
         }
 
@@ -380,6 +398,31 @@ public class FXMLDocumentController implements Initializable {
         b = b * b;
 
         return Math.sqrt(r + g + b);
+    }
+    
+    
+    @FXML
+    private void saveImageJPG() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save image in JPG format");
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("JPG", "*.jpg"));
+        File file = fileChooser.showSaveDialog(null);
+
+        if (file != null) {
+            jpgSaver(writableImage, file);
+        }
+    }
+    
+    private void jpgSaver(Image content, File file) {
+        BufferedImage bfImage = SwingFXUtils.fromFXImage(content, null);
+        BufferedImage bfImage2 = null;
+        bfImage2 = new BufferedImage(bfImage.getWidth(), bfImage.getHeight(), BufferedImage.TYPE_INT_RGB);
+        bfImage2.getGraphics().drawImage(bfImage, 0, 0, null);
+        try {
+            ImageIO.write(bfImage2, "png", file);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 
 }
