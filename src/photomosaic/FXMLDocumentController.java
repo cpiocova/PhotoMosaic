@@ -34,6 +34,7 @@ import javafx.stage.FileChooser;
 public class FXMLDocumentController implements Initializable {
 
     ImageOriginal imageOriginal;
+    WritableImage writableImage;
 
     @FXML
     private RadioButton generateAnimals;
@@ -48,9 +49,13 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private ImageView imageView;
     @FXML
-    private TextField subWidth;
+    private TextField returnHeight;
     @FXML
-    private TextField subHeight;
+    private TextField returnWidth;
+    @FXML
+    private TextField mosWidth;
+    @FXML
+    private TextField mosHeight;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -97,14 +102,15 @@ public class FXMLDocumentController implements Initializable {
         } catch (FileNotFoundException ex) {
             Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
         }
-
+        int id = 0;
         for (int i = 0; i < fileCount; i++) {
+
             double r = 0, g = 0, b = 0;
 
             Image image = new Image("file:" + directory + "/" + i + ".jpg");
             PixelReader pixelReader = image.getPixelReader();
 
-            double pixelSize = image.getWidth() * image.getHeight();
+            double pixelNumber = image.getWidth() * image.getHeight();
 
             for (int x = 0; x < image.getWidth(); x++) {
                 for (int y = 0; y < image.getHeight(); y++) {
@@ -118,12 +124,15 @@ public class FXMLDocumentController implements Initializable {
                 }
             }
 
-            r = r / pixelSize;
-            g = g / pixelSize;
-            b = b / pixelSize;
+            r = r / pixelNumber;
+            g = g / pixelNumber;
+            b = b / pixelNumber;
 
             if (!Double.isNaN(r) && !Double.isNaN(g) && !Double.isNaN(b)) {
-                outFile.println(r + " " + g + " " + b);
+                outFile.println(i + " " + r + " " + g + " " + b);
+                id++;
+            } else {
+                id = id < 0 ? 0 : id--;
             }
         }
         outFile.close();
@@ -172,59 +181,205 @@ public class FXMLDocumentController implements Initializable {
 
     }
 
-    @FXML
-    private void generatePhotoMosaic(ActionEvent event) {
-        int[] sub = new int[2];
-        sub[0] = 10; sub[1] = 10;
-        Color [][] waAvg = new Color[10][10];
-        imageOriginal.setWeightedAverage(waAvg);
-        
-        imageOriginal.setSubdivisions(sub);
-        for(int Q = 0; Q < 10; Q++) {
-            for(int P = 0; P < 10; P++ ) {
-                subdivisionsImage(P, Q,imageOriginal.getWeightedAverage());
+    public boolean isNumeric(String strNum) {
+        if (strNum == null) {
+            return false;
+        }
+        try {
+            double d = Double.parseDouble(strNum);
+        } catch (NumberFormatException nfe) {
+            return false;
+        }
+        return true;
+    }
+
+    private boolean validateString(String in) {
+        if (in != null && !in.isEmpty() && isNumeric(in)) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean checkEntries() {
+        boolean mW = validateString(mosWidth.getText());
+        boolean mH = validateString(mosHeight.getText());
+        boolean iW = validateString(returnWidth.getText());
+        boolean iH = validateString(returnHeight.getText());
+
+        if (mW && mH && iW && iH) {
+            int mWNumber = Integer.parseInt(mosWidth.getText());
+            int mHNumber = Integer.parseInt(mosHeight.getText());
+            int iWNumber = Integer.parseInt(returnWidth.getText());
+            int iHNumber = Integer.parseInt(returnHeight.getText());
+            return mWNumber <= iWNumber && mHNumber <= iHNumber && mWNumber > 0 && mHNumber > 0 && iWNumber > 0 && iHNumber > 0;
+        } else {
+            return false;
+        }
+    }
+
+    private void subdivisionsImage(int P, int Q, Color[][] waAvg) {
+        int m = Integer.parseInt(mosWidth.getText());
+        int n = Integer.parseInt(mosHeight.getText());
+
+        Image imageLoaded = imageOriginal.getCurrentImage();
+        double r = 0, g = 0, b = 0;
+        PixelReader pixelReader = imageLoaded.getPixelReader();
+        double pixelNumber = m * n;
+        for (int y = Q * n; y < n + (Q * n); y++) {
+            for (int x = P * m; x < m + (P * m); x++) {
+                Color color = pixelReader.getColor(x, y);
+                r = r + color.getRed();
+                g = g + color.getGreen();
+                b = b + color.getBlue();
             }
         }
-             
-        
+        r = r / pixelNumber;
+        g = g / pixelNumber;
+        b = b / pixelNumber;
+        Color wa = new Color(r, g, b, 1.0);
+        waAvg[P][Q] = wa;
+        imageOriginal.setWeightedAverage(waAvg);
+    }
+
+    @FXML
+    private void generatePhotoMosaic(ActionEvent event) {
+        int wmos = Integer.parseInt(mosWidth.getText());
+        int hmos = Integer.parseInt(mosHeight.getText());
+
+        if (checkEntries()) {
+            int width = (int) (imageOriginal.getCurrentImage().getWidth() / wmos);
+            int height = (int) (imageOriginal.getCurrentImage().getHeight() / hmos);
+
+            Color[][] waAvg = new Color[width][height];
+            imageOriginal.setWeightedAverage(waAvg);
+
+            for (int Q = 0; Q < height; Q++) {
+                for (int P = 0; P < width; P++) {
+                    subdivisionsImage(P, Q, imageOriginal.getWeightedAverage());
+                }
+            }
+
+            calculateCandidates(width, height);
+            calculateReason();
+
+        }
+    }    
+    
+    private void calculateReason() {
+
+        int wmos = Integer.parseInt(mosWidth.getText());
+        int hmos = Integer.parseInt(mosHeight.getText());
+
+        int inputWidth = Integer.parseInt(returnWidth.getText());
+        int inputHeight = Integer.parseInt(returnHeight.getText());
+        int originalWidth = (int) imageOriginal.getCurrentImage().getWidth();
+        int originalHeight = (int) imageOriginal.getCurrentImage().getHeight();
+
+        double reasonWidth = (double) inputWidth / (double) originalWidth;
+        double reasonHeight = (double) inputHeight / (double) originalHeight;
+
+        int mScaleWidth = (int) Math.round(reasonWidth * wmos);
+        int mScaleHeight = (int) Math.round(reasonHeight * hmos);
+
+        int width = (int) Math.ceil(inputWidth / mScaleWidth);
+        int height = (int) Math.ceil(inputHeight / mScaleHeight);
+
+        writableImage = new WritableImage(inputWidth, inputHeight);
+        PixelWriter pixelWriter = writableImage.getPixelWriter();
+
+        for (int Q = 0; Q < height; Q++) {
+            for (int P = 0; P < width; P++) {
+                Color color = getCorrespondingColor(P, Q, mScaleWidth, mScaleHeight);
+
+            }
+        }
+
+//        writeImage();        
+    }
+
+    private Color getCorrespondingColor(int P, int Q, int m, int n) {
+        return new Color(0, 0, 0, 1);
+//        for (int y = 0; y < inputHeight; y++) {
+//            for (int x = 0; x < inputWidth; x++) {
+//
+//            }
+//        }
+    }
+
+//    private void zoomNeighbor(double zoomValue) {
+//        int width = (int) Math.round(imageWidth * zoomValue);
+//        int height = (int) Math.round(imageHeight * zoomValue);
+//        width = width > 0 ? width : 1;
+//        height = height > 0 ? height : 1;
+//        Color[][] current = pic.getScaleMatrix();
+//        zoomWritable = new WritableImage(width, height);
+//        zoomWriter = zoomWritable.getPixelWriter();
+//        for (int y = 0; y < height; y++) {
+//            for (int x = 0; x < width; x++) {
+//                if (x < width && y < height) {
+//                    int zX = (int) (x / zoomValue);
+//                    int zY = (int) (y / zoomValue);
+//                    Color zoomColor = current[zX][zY];
+//                    zoomWriter.setColor(x, y, zoomColor);
+//                }
+//            }
+//        }
+//    }
+    private void calculateCandidates(int width, int height) {
+        int[][] candidateImg = new int[width][height];
+        int candidate;
+
+        for (int Q = 0; Q < height; Q++) {
+            for (int P = 0; P < width; P++) {
+                candidate = findCandidate(imageOriginal.getWeightedAverage()[P][Q], new File("vectors/vector0.txt"));
+                candidateImg[P][Q] = candidate;
+                System.out.println(P + " " + Q + " " + "CANDIDATES: " + candidate);
+            }
+        }
+
+        imageOriginal.setCandidates(candidateImg);
+    }
+
+    private int findCandidate(Color color, File file) {
         Scanner scan;
-        File file = new File("vectors/vector0.txt");
-        double[] rgb = new double[3];
+        double[] irgb = new double[4];
+        double min = 0, temp = 0;
+        int candidateIndex = 0;
+
         try {
             scan = new Scanner(file);
-            while (scan.hasNextDouble()) {
-                for (int channels = 0; channels < 3; channels++) {
-                    rgb[channels] = scan.nextDouble();
+            if (scan.hasNextDouble()) {
+                for (int channels = 0; channels < 4; channels++) {
+                    irgb[channels] = scan.nextDouble();
                 }
-                System.out.println();
+                min = calculateDistance(irgb, color);
+            }
+            while (scan.hasNextDouble()) {
+                for (int channels = 0; channels < 4; channels++) {
+                    irgb[channels] = scan.nextDouble();
+                }
+                temp = calculateDistance(irgb, color);
+                if (temp < min) {
+                    min = temp;
+                    candidateIndex = (int) irgb[0];
+                }
             }
         } catch (FileNotFoundException e1) {
             e1.printStackTrace();
         }
+        return candidateIndex;
     }
-    
-    private void subdivisionsImage(int P, int Q, Color [][] waAvg){
-        int [] sub = imageOriginal.getSubdivisions();
-        int m = sub[0], n = sub[1];
-        
-            Image imageLoaded = imageOriginal.getCurrentImage();
-            double r = 0, g = 0, b = 0;
-            PixelReader pixelReader = imageLoaded.getPixelReader();
-            double pixelSize = imageLoaded.getWidth() * imageLoaded.getHeight();
-            for (int y = 0 + (Q * n); y < n + (Q * n); y++) {
-                for (int x = 0 + (P * m); x < m + (P * m); x++) {
-                    Color color = pixelReader.getColor(x, y);
-                    r = r + color.getRed();
-                    g = g + color.getGreen();
-                    b = b + color.getBlue();
-                }
-            }
-            r = r / pixelSize;
-            g = g / pixelSize;
-            b = b / pixelSize;
-            Color wa = new Color(r, g, b, 1.0);
-            waAvg[P][Q] = wa;
-            imageOriginal.setWeightedAverage(waAvg);    
+
+    private double calculateDistance(double[] color1, Color color2) {
+        double r = color1[1] - color2.getRed();
+        double g = color1[2] - color2.getGreen();
+        double b = color1[3] - color2.getBlue();
+
+        r = r * r;
+        g = g * g;
+        b = b * b;
+
+        return Math.sqrt(r + g + b);
     }
 
 }

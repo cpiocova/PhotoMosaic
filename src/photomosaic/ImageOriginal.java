@@ -13,10 +13,13 @@ import javafx.scene.paint.Color;
  * @author Jose Pio Montilva y Giselt Parra
  */
 public class ImageOriginal {
-    
-    private Color [][] weightedAverage;
+
+    private Color[][] weightedAverage;
+
     private Image currentImage;
-    private int [] subdivisions;
+    private int[] subdivisions;
+    private double[] distances;
+    private int[][] candidates;
     
 
     public Image getCurrentImage() {
@@ -33,7 +36,7 @@ public class ImageOriginal {
 
     public void setWeightedAverage(Color[][] weightedAverage) {
         this.weightedAverage = weightedAverage;
-    }   
+    }
 
     public int[] getSubdivisions() {
         return subdivisions;
@@ -42,7 +45,24 @@ public class ImageOriginal {
     public void setSubdivisions(int[] subdivisions) {
         this.subdivisions = subdivisions;
     }
+
+    public double[] getDistances() {
+        return distances;
+    }
+
+    public void setDistances(double[] distances) {
+        this.distances = distances;
+    }
+
+    public int[][] getCandidates() {
+        return candidates;
+    }
+
+    public void setCandidates(int[][] candidates) {
+        this.candidates = candidates;
+    }
+
+
     
-    
-    
+
 }
