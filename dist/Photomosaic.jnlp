@@ -8,7 +8,7 @@
   </information>
   <resources>
     <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
-    <jar href="Photomosaic.jar" size="13785" download="eager" />
+    <jar href="Photomosaic.jar" size="13792" download="eager" />
     <jar href="lib\commons-logging-1.2.jar" size="61829" download="eager" />
     <jar href="lib\pdfbox-2.0.21.jar" size="2718635" download="eager" />
     <jar href="lib\pdfbox-app-2.0.21.jar" size="9897381" download="eager" />

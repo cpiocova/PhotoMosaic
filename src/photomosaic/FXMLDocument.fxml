@@ -29,7 +29,7 @@
                      </toggleGroup>
                   </RadioButton>
                   <RadioButton fx:id="generateMountains" layoutX="15.0" layoutY="83.0" mnemonicParsing="false" text="Mountains" toggleGroup="$radioGenerate" />
-                  <RadioButton fx:id="generateGames" layoutX="15.0" layoutY="103.0" mnemonicParsing="false" text="Games" toggleGroup="$radioGenerate" />
+                  <RadioButton fx:id="generateGames" layoutX="15.0" layoutY="103.0" mnemonicParsing="false" text="Movies" toggleGroup="$radioGenerate" />
                   <RadioButton fx:id="generateCars" layoutX="15.0" layoutY="123.0" mnemonicParsing="false" text="Cars" toggleGroup="$radioGenerate" />
                   <Label layoutX="15.0" layoutY="14.0" prefHeight="17.0" prefWidth="134.0" text="Generate repository" textFill="#42b0ff" underline="true" />
                </children>
@@ -39,7 +39,7 @@
                   <Label layoutX="12.0" layoutY="18.0" prefHeight="17.0" prefWidth="165.0" text="Generate characteristic vectors" textFill="#42b0ff" underline="true" />
                   <Button layoutX="53.0" layoutY="46.0" mnemonicParsing="false" onAction="#generateCVAnimals" prefHeight="25.0" prefWidth="78.0" text="Animals" />
                   <Button layoutX="53.0" layoutY="92.0" mnemonicParsing="false" onAction="#generateCVMountains" prefHeight="25.0" prefWidth="78.0" text="Mountains" />
-                  <Button layoutX="53.0" layoutY="132.0" mnemonicParsing="false" onAction="#generateCVGames" prefHeight="25.0" prefWidth="78.0" text="Games" />
+                  <Button layoutX="53.0" layoutY="132.0" mnemonicParsing="false" onAction="#generateCVMovies" prefHeight="25.0" prefWidth="78.0" text="Movies" />
                   <Button layoutX="53.0" layoutY="173.0" mnemonicParsing="false" onAction="#generateCVCars" prefHeight="25.0" prefWidth="78.0" text="Cars" />
                </children>
             </AnchorPane>
@@ -48,7 +48,7 @@
                   <Label layoutX="12.0" layoutY="18.0" prefHeight="17.0" prefWidth="188.0" text="Select repositories" textFill="#42b0ff" underline="true" />
                   <CheckBox layoutX="15.0" layoutY="47.0" mnemonicParsing="false" selected="true" text="Animals" />
                   <CheckBox layoutX="15.0" layoutY="77.0" mnemonicParsing="false" text="Mountains" />
-                  <CheckBox layoutX="15.0" layoutY="107.0" mnemonicParsing="false" text="Games" />
+                  <CheckBox layoutX="15.0" layoutY="107.0" mnemonicParsing="false" text="Movies" />
                   <CheckBox layoutX="15.0" layoutY="137.0" mnemonicParsing="false" text="Cars" />
                   <Button layoutX="19.0" layoutY="189.0" mnemonicParsing="false" onAction="#generatePhotoMosaic" prefHeight="39.0" prefWidth="402.0" text="Generate PhotoMosaic" />
                   <Label layoutX="181.0" layoutY="18.0" prefHeight="17.0" prefWidth="188.0" text="Mosaic Size" textFill="#42b0ff" underline="true" />

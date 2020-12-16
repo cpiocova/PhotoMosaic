@@ -6,11 +6,9 @@
 package photomosaic;
 
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
+
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -20,11 +18,8 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.ImageView;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.PrintWriter;
-import java.util.Arrays;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -41,12 +36,10 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javax.imageio.ImageIO;
-import javax.imageio.stream.ImageOutputStream;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
-import org.apache.pdfbox.pdmodel.graphics.PDXObject;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 
 
@@ -67,8 +60,6 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private RadioButton generateMountains;
     @FXML
-    private RadioButton generateGames;
-    @FXML
     private RadioButton generateCars;
     @FXML
     private ImageView imageView;
@@ -80,6 +71,8 @@ public class FXMLDocumentController implements Initializable {
     private TextField mosWidth;
     @FXML
     private TextField mosHeight;
+    @FXML
+    private RadioButton generateGames;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -106,7 +99,7 @@ public class FXMLDocumentController implements Initializable {
     }
 
     @FXML
-    private void generateCVGames(ActionEvent event) {
+    private void generateCVMovies(ActionEvent event) {
         File directory = new File("repositories/repository0");
         generateCV(directory, 2);
     }
@@ -491,6 +484,8 @@ public class FXMLDocumentController implements Initializable {
         }
    
     }
+
+
     
 
     
