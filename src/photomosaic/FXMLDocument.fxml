@@ -46,10 +46,10 @@
             <AnchorPane prefHeight="233.0" prefWidth="237.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <children>
                   <Label layoutX="12.0" layoutY="18.0" prefHeight="17.0" prefWidth="188.0" text="Select repositories" textFill="#42b0ff" underline="true" />
-                  <CheckBox layoutX="15.0" layoutY="51.0" mnemonicParsing="false" selected="true" text="Animals" />
-                  <CheckBox layoutX="15.0" layoutY="81.0" mnemonicParsing="false" text="Mountains" />
-                  <CheckBox layoutX="15.0" layoutY="111.0" mnemonicParsing="false" text="Movies" />
-                  <CheckBox layoutX="15.0" layoutY="141.0" mnemonicParsing="false" text="Cars" />
+                  <CheckBox fx:id="checkRepo0" layoutX="15.0" layoutY="51.0" mnemonicParsing="false" selected="true" text="Animals" />
+                  <CheckBox fx:id="checkRepo1" layoutX="15.0" layoutY="81.0" mnemonicParsing="false" text="Mountains" />
+                  <CheckBox fx:id="checkRepo2" layoutX="15.0" layoutY="111.0" mnemonicParsing="false" text="Movies" />
+                  <CheckBox fx:id="checkRepo3" layoutX="15.0" layoutY="141.0" mnemonicParsing="false" text="Cars" />
                   <Button layoutX="19.0" layoutY="189.0" mnemonicParsing="false" onAction="#generatePhotoMosaic" prefHeight="39.0" prefWidth="402.0" text="Generate PhotoMosaic" />
                   <Label layoutX="139.0" layoutY="18.0" prefHeight="17.0" prefWidth="188.0" text="Mosaic Size" textFill="#42b0ff" underline="true" />
                   <TextField fx:id="mosWidth" layoutX="121.0" layoutY="45.0" prefHeight="25.0" prefWidth="53.0" promptText="10" text="10" />

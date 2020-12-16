@@ -46,10 +46,10 @@
             <AnchorPane prefHeight="233.0" prefWidth="237.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <children>
                   <Label layoutX="12.0" layoutY="18.0" prefHeight="17.0" prefWidth="188.0" text="Select repositories" textFill="#42b0ff" underline="true" />
-                  <CheckBox layoutX="15.0" layoutY="51.0" mnemonicParsing="false" selected="true" text="Animals" />
-                  <CheckBox layoutX="15.0" layoutY="81.0" mnemonicParsing="false" text="Mountains" />
-                  <CheckBox layoutX="15.0" layoutY="111.0" mnemonicParsing="false" text="Movies" />
-                  <CheckBox layoutX="15.0" layoutY="141.0" mnemonicParsing="false" text="Cars" />
+                  <CheckBox fx:id="checkRepo0" layoutX="15.0" layoutY="51.0" mnemonicParsing="false" selected="true" text="Animals" />
+                  <CheckBox fx:id="checkRepo1" layoutX="15.0" layoutY="81.0" mnemonicParsing="false" text="Mountains" />
+                  <CheckBox fx:id="checkRepo2" layoutX="15.0" layoutY="111.0" mnemonicParsing="false" text="Movies" />
+                  <CheckBox fx:id="checkRepo3" layoutX="15.0" layoutY="141.0" mnemonicParsing="false" text="Cars" />
                   <Button layoutX="19.0" layoutY="189.0" mnemonicParsing="false" onAction="#generatePhotoMosaic" prefHeight="39.0" prefWidth="402.0" text="Generate PhotoMosaic" />
                   <Label layoutX="139.0" layoutY="18.0" prefHeight="17.0" prefWidth="188.0" text="Mosaic Size" textFill="#42b0ff" underline="true" />
                   <TextField fx:id="mosWidth" layoutX="121.0" layoutY="45.0" prefHeight="25.0" prefWidth="53.0" promptText="10" text="10" />
@@ -60,8 +60,8 @@
                   <Label layoutX="189.0" layoutY="160.0" text="height" />
                   <Label layoutX="129.0" layoutY="160.0" text="width" />
                   <Label layoutX="174.0" layoutY="139.0" text="x" />
-                  <TextField fx:id="returnHeight" layoutX="181.0" layoutY="135.0" prefHeight="25.0" prefWidth="53.0" promptText="810" text="810" />
-                  <TextField fx:id="returnWidth" layoutX="121.0" layoutY="135.0" prefHeight="25.0" prefWidth="53.0" promptText="1440" text="1440" />
+                  <TextField fx:id="returnHeight" layoutX="181.0" layoutY="135.0" prefHeight="25.0" prefWidth="53.0" promptText="500" text="500" />
+                  <TextField fx:id="returnWidth" layoutX="121.0" layoutY="135.0" prefHeight="25.0" prefWidth="53.0" promptText="500" text="500" />
                   <Label layoutX="125.0" layoutY="108.0" prefHeight="17.0" prefWidth="188.0" text="Return Image Size" textFill="#42b0ff" underline="true" />
                   <RadioButton layoutX="271.0" layoutY="79.0" mnemonicParsing="false" selected="true" text="Criteria 1">
                      <toggleGroup>

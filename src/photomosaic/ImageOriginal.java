@@ -19,7 +19,7 @@ public class ImageOriginal {
     private Image currentImage;
     private int[] subdivisions;
     private double[] distances;
-    private int[][] candidates;
+    private Indexes[][] candidates;
     
 
     public Image getCurrentImage() {
@@ -54,15 +54,13 @@ public class ImageOriginal {
         this.distances = distances;
     }
 
-    public int[][] getCandidates() {
+    public Indexes[][] getCandidates() {
         return candidates;
     }
 
-    public void setCandidates(int[][] candidates) {
+    public void setCandidates(Indexes[][] candidates) {
         this.candidates = candidates;
     }
-
-
-    
+   
 
 }

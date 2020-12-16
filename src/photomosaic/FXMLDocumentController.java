@@ -7,7 +7,6 @@ package photomosaic;
 
 import java.awt.image.BufferedImage;
 
-
 import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -28,6 +27,7 @@ import javafx.print.PageLayout;
 import javafx.print.PageOrientation;
 import javafx.print.Printer;
 import javafx.print.PrinterJob;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
@@ -41,8 +41,6 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
-
-
 
 /**
  *
@@ -75,6 +73,14 @@ public class FXMLDocumentController implements Initializable {
     private ToggleGroup radioCriteria;
     @FXML
     private RadioButton generateGames;
+    @FXML
+    private CheckBox checkRepo0;
+    @FXML
+    private CheckBox checkRepo1;
+    @FXML
+    private CheckBox checkRepo2;
+    @FXML
+    private CheckBox checkRepo3;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -130,14 +136,14 @@ public class FXMLDocumentController implements Initializable {
             }
             int id = 0;
             for (int i = 0; i < fileCount; i++) {
-                
+
                 double r = 0, g = 0, b = 0;
-                
+
                 Image image = new Image("file:" + directory + "/" + i + ".jpg");
                 PixelReader pixelReader = image.getPixelReader();
-                
+
                 double pixelNumber = image.getWidth() * image.getHeight();
-                
+
                 for (int x = 0; x < image.getWidth(); x++) {
                     for (int y = 0; y < image.getHeight(); y++) {
                         Color color = pixelReader.getColor(x, y);
@@ -149,24 +155,25 @@ public class FXMLDocumentController implements Initializable {
                         }
                     }
                 }
-                
+
                 r = r / pixelNumber;
                 g = g / pixelNumber;
                 b = b / pixelNumber;
-                
+
                 if (!Double.isNaN(r) && !Double.isNaN(g) && !Double.isNaN(b)) {
-                    outFile.println(i + " " + r + " " + g + " " + b);
+                    outFile.println(index + " " + i + " " + r + " " + g + " " + b);
                     id++;
                 } else {
                     id = id < 0 ? 0 : id--;
                 }
             }
             outFile.close();
-            
+
         } catch (IOException ex) {
             Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
     private void VectorsCriteria2(File directory, int index) {
         try {
             int fileCount = directory.list().length;
@@ -181,14 +188,14 @@ public class FXMLDocumentController implements Initializable {
             }
             int id = 0;
             for (int i = 0; i < fileCount; i++) {
-                
+
                 double r = 0, g = 0, b = 0;
-                
+
                 Image image = new Image("file:" + directory + "/" + i + ".jpg");
                 PixelReader pixelReader = image.getPixelReader();
-                
+
                 double pixelNumber = image.getWidth() * image.getHeight();
-                
+
                 for (int x = 0; x < image.getWidth(); x++) {
                     for (int y = 0; y < image.getHeight(); y++) {
                         Color color = pixelReader.getColor(x, y);
@@ -200,20 +207,20 @@ public class FXMLDocumentController implements Initializable {
                         }
                     }
                 }
-                
+
                 r = r / pixelNumber;
                 g = g / pixelNumber;
                 b = b / pixelNumber;
-                
+
                 if (!Double.isNaN(r) && !Double.isNaN(g) && !Double.isNaN(b)) {
-                    outFile.println(i + " " + r + " " + g + " " + b);
+                    outFile.println(index + " " + i + " " + r + " " + g + " " + b);
                     id++;
                 } else {
                     id = id < 0 ? 0 : id--;
                 }
             }
             outFile.close();
-            
+
         } catch (IOException ex) {
             Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -234,34 +241,6 @@ public class FXMLDocumentController implements Initializable {
             returnWidth.setText("" + (int) imageLoaded.getWidth());
 
         }
-    }
-
-    private void averageSegments() {
-        Image imageLoaded = imageOriginal.getCurrentImage();
-        double r = 0, g = 0, b = 0;
-
-        PixelReader pixelReader = imageLoaded.getPixelReader();
-
-        double pixelSize = imageLoaded.getWidth() * imageLoaded.getHeight();
-
-        for (int x = 0; x < imageLoaded.getWidth(); x++) {
-            for (int y = 0; y < imageLoaded.getHeight(); y++) {
-                Color color = pixelReader.getColor(x, y);
-                r = r + color.getRed();
-                g = g + color.getGreen();
-                b = b + color.getBlue();
-                if (r == Double.NaN || g == Double.NaN || b == Double.NaN) {
-                    break;
-                }
-            }
-        }
-
-        r = r / pixelSize;
-        g = g / pixelSize;
-        b = b / pixelSize;
-
-        Color wa = new Color(r, g, b, 1.0);
-
     }
 
     public boolean isNumeric(String strNum) {
@@ -341,14 +320,13 @@ public class FXMLDocumentController implements Initializable {
                     subdivisionsImage(P, Q, imageOriginal.getWeightedAverage());
                 }
             }
-
             calculateCandidates(width, height);
-            calculateReason();
+            calculateImage();
 
         }
     }
 
-    private void calculateReason() {
+    private void calculateImage() {
 
         int wmos = Integer.parseInt(mosWidth.getText());
         int hmos = Integer.parseInt(mosHeight.getText());
@@ -380,8 +358,11 @@ public class FXMLDocumentController implements Initializable {
     }
 
     private void writerImage(int P, int Q, int m, int n) {
-        int candidate = imageOriginal.getCandidates()[P][Q];
-        Image imageCandidate = new Image("file:" + "repositories/repository3/" + candidate + ".jpg");
+        Indexes candidates = imageOriginal.getCandidates()[P][Q];
+        int photoIndex = candidates.getPhotoIndex();
+        int fileIndex = candidates.getFileIndex();
+        
+        Image imageCandidate = new Image("file:" + "repositories/repository" + fileIndex + "/" + photoIndex + ".jpg");
         Image scaled = scaleImage(imageCandidate, m, n);
         PixelReader pixelReader = scaled.getPixelReader();
         PixelWriter pixelWriter = writableImage.getPixelWriter();
@@ -422,56 +403,73 @@ public class FXMLDocumentController implements Initializable {
         return scaleWritable;
     }
 
-    private void calculateCandidates(int width, int height) {
-        int[][] candidateImg = new int[width][height];
-        int candidate;
-        
-        int criteria = radioCriteria.getToggles().indexOf(radioCriteria.getSelectedToggle());
+    private void calculateCandidates(int width, int height) {      
+        Indexes [][] candidatesImg = new Indexes[width][height];
+        Indexes candidates;
 
         for (int Q = 0; Q < height; Q++) {
             for (int P = 0; P < width; P++) {
-                candidate = findCandidate(imageOriginal.getWeightedAverage()[P][Q], new File("vectors/criteria" + criteria + "/vector3.txt"));
-                candidateImg[P][Q] = candidate;
+                candidates = findCandidate(P, Q);
+                candidatesImg[P][Q] = candidates;
             }
         }
 
-        imageOriginal.setCandidates(candidateImg);
+        imageOriginal.setCandidates(candidatesImg);
     }
 
-    private int findCandidate(Color color, File file) {
-        Scanner scan;
-        double[] irgb = new double[4];
-        double min = 0, temp = 0;
-        int candidateIndex = 0;
+    private Indexes findCandidate(int P, int Q) {
+        int criteria = radioCriteria.getToggles().indexOf(radioCriteria.getSelectedToggle());
+        Color color = imageOriginal.getWeightedAverage()[P][Q];
+        
+        boolean[] enableRepo = new boolean[4];
+        enableRepo[0] = checkRepo0.isSelected();
+        enableRepo[1] = checkRepo1.isSelected();
+        enableRepo[2] = checkRepo2.isSelected();
+        enableRepo[3] = checkRepo3.isSelected();
 
-        try {
-            scan = new Scanner(file);
-            if (scan.hasNextDouble()) {
-                for (int channels = 0; channels < 4; channels++) {
-                    irgb[channels] = scan.nextDouble();
+        Scanner scan;
+        
+        double[] firgb = new double[5];
+        double min = -1;
+        double temp = 0;
+        Indexes candidates = new Indexes();
+  
+
+        for (int i = 0; i < enableRepo.length; i++) {
+            if (enableRepo[i]) {
+                File file = new File("vectors/criteria" + criteria + "/vector" + i + ".txt");
+                try {
+                    scan = new Scanner(file);
+                    if (scan.hasNextDouble() && min == -1) {
+                        for (int channels = 0; channels < firgb.length; channels++) {
+                            firgb[channels] = scan.nextDouble();
+                        }
+                        min = calculateDistance(firgb, color);
+                    }
+                    while (scan.hasNextDouble()) {
+                        for (int channels = 0; channels < firgb.length; channels++) {
+                            firgb[channels] = scan.nextDouble();
+                        }
+                        temp = calculateDistance(firgb, color);
+                        if (temp < min) {
+                            min = temp;
+                            candidates.setFileIndex((int) firgb[0]);
+                            candidates.setPhotoIndex((int) firgb[1]);
+                            candidates.setDistance(min);
+                        }
+                    }
+                } catch (FileNotFoundException e1) {
+                    e1.printStackTrace();
                 }
-                min = calculateDistance(irgb, color);
             }
-            while (scan.hasNextDouble()) {
-                for (int channels = 0; channels < 4; channels++) {
-                    irgb[channels] = scan.nextDouble();
-                }
-                temp = calculateDistance(irgb, color);
-                if (temp < min) {
-                    min = temp;
-                    candidateIndex = (int) irgb[0];
-                }
-            }
-        } catch (FileNotFoundException e1) {
-            e1.printStackTrace();
         }
-        return candidateIndex;
+        return candidates;
     }
 
     private double calculateDistance(double[] color1, Color color2) {
-        double r = color1[1] - color2.getRed();
-        double g = color1[2] - color2.getGreen();
-        double b = color1[3] - color2.getBlue();
+        double r = color1[2] - color2.getRed();
+        double g = color1[3] - color2.getGreen();
+        double b = color1[4] - color2.getBlue();
 
         r = r * r;
         g = g * g;
@@ -525,35 +523,29 @@ public class FXMLDocumentController implements Initializable {
         fileChooser.setTitle("Save image in PDF format");
         fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("PDF", "*.pdf"));
         File file = fileChooser.showSaveDialog(null);
-        
+
         try {
             PDDocument doc = new PDDocument();
             PDPage page = new PDPage();
-            
+
             String imagePath = "repositories/repository0/1.jpg";
 
             String fileName = file.getAbsolutePath();
-            
+
             doc.addPage(page);
-            
+
             PDImageXObject img = PDImageXObject.createFromFile(imagePath, doc);
             PDPageContentStream content = new PDPageContentStream(doc, page);
-            
+
             content.drawImage(img, 0, 0, (float) Integer.parseInt(returnWidth.getText()), (float) Integer.parseInt(returnHeight.getText()));
             content.close();
             doc.save(fileName);
             doc.close();
-            
+
         } catch (IOException ex) {
             Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
         }
-   
+
     }
-
-
-    
-
-    
-
 
 }
