@@ -72,6 +72,8 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private TextField mosHeight;
     @FXML
+    private ToggleGroup radioCriteria;
+    @FXML
     private RadioButton generateGames;
 
     @Override
@@ -89,71 +91,132 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private void generateCVAnimals(ActionEvent event) {
         File directory = new File("repositories/repository0");
-        generateCV(directory, 0);
+        VectorsCriteria1(directory, 0);
+        VectorsCriteria2(directory, 0);
     }
 
     @FXML
     private void generateCVMountains(ActionEvent event) {
-        File directory = new File("repositories/repository0");
-        generateCV(directory, 1);
+        File directory = new File("repositories/repository1");
+        VectorsCriteria1(directory, 1);
+        VectorsCriteria2(directory, 1);
     }
 
     @FXML
     private void generateCVMovies(ActionEvent event) {
-        File directory = new File("repositories/repository0");
-        generateCV(directory, 2);
+        File directory = new File("repositories/repository2");
+        VectorsCriteria1(directory, 2);
+        VectorsCriteria2(directory, 2);
     }
 
     @FXML
     private void generateCVCars(ActionEvent event) {
-        File directory = new File("repositories/repository0");
-        generateCV(directory, 3);
+        File directory = new File("repositories/repository3");
+        VectorsCriteria1(directory, 3);
+        VectorsCriteria2(directory, 3);
     }
 
-    private void generateCV(File directory, int index) {
-        int fileCount = directory.list().length;
-        PrintWriter outFile = null;
-        File cvFile = new File("vectors/vector" + index + ".txt");
+    private void VectorsCriteria1(File directory, int index) {
         try {
-            outFile = new PrintWriter(cvFile);
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        int id = 0;
-        for (int i = 0; i < fileCount; i++) {
-
-            double r = 0, g = 0, b = 0;
-
-            Image image = new Image("file:" + directory + "/" + i + ".jpg");
-            PixelReader pixelReader = image.getPixelReader();
-
-            double pixelNumber = image.getWidth() * image.getHeight();
-
-            for (int x = 0; x < image.getWidth(); x++) {
-                for (int y = 0; y < image.getHeight(); y++) {
-                    Color color = pixelReader.getColor(x, y);
-                    r = r + color.getRed();
-                    g = g + color.getGreen();
-                    b = b + color.getBlue();
-                    if (r == Double.NaN || g == Double.NaN || b == Double.NaN) {
-                        break;
+            int fileCount = directory.list().length;
+            PrintWriter outFile = null;
+            File cvFile = new File("vectors/criteria0/vector" + index + ".txt");
+            cvFile.getParentFile().mkdirs();
+            cvFile.createNewFile();
+            try {
+                outFile = new PrintWriter(cvFile);
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            int id = 0;
+            for (int i = 0; i < fileCount; i++) {
+                
+                double r = 0, g = 0, b = 0;
+                
+                Image image = new Image("file:" + directory + "/" + i + ".jpg");
+                PixelReader pixelReader = image.getPixelReader();
+                
+                double pixelNumber = image.getWidth() * image.getHeight();
+                
+                for (int x = 0; x < image.getWidth(); x++) {
+                    for (int y = 0; y < image.getHeight(); y++) {
+                        Color color = pixelReader.getColor(x, y);
+                        r = r + color.getRed();
+                        g = g + color.getGreen();
+                        b = b + color.getBlue();
+                        if (r == Double.NaN || g == Double.NaN || b == Double.NaN) {
+                            break;
+                        }
                     }
                 }
+                
+                r = r / pixelNumber;
+                g = g / pixelNumber;
+                b = b / pixelNumber;
+                
+                if (!Double.isNaN(r) && !Double.isNaN(g) && !Double.isNaN(b)) {
+                    outFile.println(i + " " + r + " " + g + " " + b);
+                    id++;
+                } else {
+                    id = id < 0 ? 0 : id--;
+                }
             }
-
-            r = r / pixelNumber;
-            g = g / pixelNumber;
-            b = b / pixelNumber;
-
-            if (!Double.isNaN(r) && !Double.isNaN(g) && !Double.isNaN(b)) {
-                outFile.println(i + " " + r + " " + g + " " + b);
-                id++;
-            } else {
-                id = id < 0 ? 0 : id--;
-            }
+            outFile.close();
+            
+        } catch (IOException ex) {
+            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        outFile.close();
-
+    }
+    private void VectorsCriteria2(File directory, int index) {
+        try {
+            int fileCount = directory.list().length;
+            PrintWriter outFile = null;
+            File cvFile = new File("vectors/criteria1/vector" + index + ".txt");
+            cvFile.getParentFile().mkdirs();
+            cvFile.createNewFile();
+            try {
+                outFile = new PrintWriter(cvFile);
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            int id = 0;
+            for (int i = 0; i < fileCount; i++) {
+                
+                double r = 0, g = 0, b = 0;
+                
+                Image image = new Image("file:" + directory + "/" + i + ".jpg");
+                PixelReader pixelReader = image.getPixelReader();
+                
+                double pixelNumber = image.getWidth() * image.getHeight();
+                
+                for (int x = 0; x < image.getWidth(); x++) {
+                    for (int y = 0; y < image.getHeight(); y++) {
+                        Color color = pixelReader.getColor(x, y);
+                        r = r + color.getRed();
+                        g = g + color.getGreen();
+                        b = b + color.getBlue();
+                        if (r == Double.NaN || g == Double.NaN || b == Double.NaN) {
+                            break;
+                        }
+                    }
+                }
+                
+                r = r / pixelNumber;
+                g = g / pixelNumber;
+                b = b / pixelNumber;
+                
+                if (!Double.isNaN(r) && !Double.isNaN(g) && !Double.isNaN(b)) {
+                    outFile.println(i + " " + r + " " + g + " " + b);
+                    id++;
+                } else {
+                    id = id < 0 ? 0 : id--;
+                }
+            }
+            outFile.close();
+            
+        } catch (IOException ex) {
+            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @FXML
@@ -318,7 +381,7 @@ public class FXMLDocumentController implements Initializable {
 
     private void writerImage(int P, int Q, int m, int n) {
         int candidate = imageOriginal.getCandidates()[P][Q];
-        Image imageCandidate = new Image("file:" + "repositories/repository0/" + candidate + ".jpg");
+        Image imageCandidate = new Image("file:" + "repositories/repository3/" + candidate + ".jpg");
         Image scaled = scaleImage(imageCandidate, m, n);
         PixelReader pixelReader = scaled.getPixelReader();
         PixelWriter pixelWriter = writableImage.getPixelWriter();
@@ -362,10 +425,12 @@ public class FXMLDocumentController implements Initializable {
     private void calculateCandidates(int width, int height) {
         int[][] candidateImg = new int[width][height];
         int candidate;
+        
+        int criteria = radioCriteria.getToggles().indexOf(radioCriteria.getSelectedToggle());
 
         for (int Q = 0; Q < height; Q++) {
             for (int P = 0; P < width; P++) {
-                candidate = findCandidate(imageOriginal.getWeightedAverage()[P][Q], new File("vectors/vector0.txt"));
+                candidate = findCandidate(imageOriginal.getWeightedAverage()[P][Q], new File("vectors/criteria" + criteria + "/vector3.txt"));
                 candidateImg[P][Q] = candidate;
             }
         }
