@@ -6,7 +6,11 @@
 package photomosaic;
 
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+
 import java.io.File;
+import java.io.FileInputStream;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -16,8 +20,11 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.ImageView;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
+import java.util.Arrays;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -32,9 +39,17 @@ import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
-import javafx.scene.transform.Scale;
 import javafx.stage.FileChooser;
 import javax.imageio.ImageIO;
+import javax.imageio.stream.ImageOutputStream;
+
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.graphics.PDXObject;
+import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
+
+
 
 /**
  *
@@ -445,5 +460,40 @@ public class FXMLDocumentController implements Initializable {
             }
         }
     }
+
+    @FXML
+    private void handleToPDF(ActionEvent event) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save image in PDF format");
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("PDF", "*.pdf"));
+        File file = fileChooser.showSaveDialog(null);
+        
+        try {
+            PDDocument doc = new PDDocument();
+            PDPage page = new PDPage();
+            
+            String imagePath = "repositories/repository0/1.jpg";
+
+            String fileName = file.getAbsolutePath();
+            
+            doc.addPage(page);
+            
+            PDImageXObject img = PDImageXObject.createFromFile(imagePath, doc);
+            PDPageContentStream content = new PDPageContentStream(doc, page);
+            
+            content.drawImage(img, 0, 0, (float) Integer.parseInt(returnWidth.getText()), (float) Integer.parseInt(returnHeight.getText()));
+            content.close();
+            doc.save(fileName);
+            doc.close();
+            
+        } catch (IOException ex) {
+            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+   
+    }
+    
+
+    
+
 
 }

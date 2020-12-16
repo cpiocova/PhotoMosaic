@@ -68,14 +68,15 @@
             <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1">
                <children>
                   <Label layoutX="17.0" layoutY="14.0" prefHeight="17.0" prefWidth="188.0" text="Select image to convert" textFill="#42b0ff" underline="true" />
-                  <Button layoutX="17.0" layoutY="52.0" mnemonicParsing="false" onAction="#imageChooser" prefHeight="25.0" prefWidth="95.0" text="Choose image" />
+                  <Button layoutX="17.0" layoutY="42.0" mnemonicParsing="false" onAction="#imageChooser" prefHeight="25.0" prefWidth="95.0" text="Choose image" />
                   <AnchorPane layoutX="149.0" layoutY="46.0" prefHeight="143.0" prefWidth="208.0">
                      <children>
                         <ImageView fx:id="imageView" fitHeight="143.0" fitWidth="256.0" pickOnBounds="true" preserveRatio="true" />
                      </children>
                   </AnchorPane>
-                  <Button layoutX="17.0" layoutY="98.0" mnemonicParsing="false" onAction="#saveImageJPG" prefHeight="25.0" prefWidth="95.0" text="Save Image" />
-                  <Button layoutX="18.0" layoutY="143.0" mnemonicParsing="false" onAction="#printImage" prefHeight="25.0" prefWidth="95.0" text="To print" />
+                  <Button layoutX="17.0" layoutY="82.0" mnemonicParsing="false" onAction="#saveImageJPG" prefHeight="25.0" prefWidth="95.0" text="Save Image" />
+                  <Button layoutX="17.0" layoutY="122.0" mnemonicParsing="false" onAction="#printImage" prefHeight="25.0" prefWidth="95.0" text="To print" />
+                  <Button layoutX="17.0" layoutY="162.0" mnemonicParsing="false" onAction="#handleToPDF" prefHeight="25.0" prefWidth="95.0" text="To PDF" />
                </children>
             </AnchorPane>
          </children>
