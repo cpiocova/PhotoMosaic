@@ -8,7 +8,7 @@
   </information>
   <resources>
     <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
-    <jar href="Photomosaic.jar" size="12587" download="eager" />
+    <jar href="Photomosaic.jar" size="17150" download="eager" />
   </resources>
   <applet-desc  width="800" height="600" main-class="com.javafx.main.NoJavaFXFallback"  name="Photomosaic" >
     <param name="requiredFXVersion" value="8.0+"/>

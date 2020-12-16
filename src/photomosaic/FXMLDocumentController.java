@@ -22,12 +22,17 @@ import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.print.PageLayout;
+import javafx.print.PageOrientation;
+import javafx.print.Printer;
+import javafx.print.PrinterJob;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
+import javafx.scene.transform.Scale;
 import javafx.stage.FileChooser;
 import javax.imageio.ImageIO;
 
@@ -154,6 +159,9 @@ public class FXMLDocumentController implements Initializable {
             Image imageLoaded = new Image("file:" + imgPath.getAbsolutePath());
             imageOriginal.setCurrentImage(imageLoaded);
             imageView.setImage(imageLoaded);
+            returnHeight.setText("" + (int) imageLoaded.getHeight());
+            returnWidth.setText("" + (int) imageLoaded.getWidth());
+
         }
     }
 
@@ -285,8 +293,8 @@ public class FXMLDocumentController implements Initializable {
         int mScaleWidth = (int) Math.round(reasonWidth * wmos);
         int mScaleHeight = (int) Math.round(reasonHeight * hmos);
 
-        int width = (int) Math.ceil(inputWidth / mScaleWidth);
-        int height = (int) Math.ceil(inputHeight / mScaleHeight);
+        int width = (int) Math.floor(inputWidth / mScaleWidth);
+        int height = (int) Math.floor(inputHeight / mScaleHeight);
 
         writableImage = new WritableImage(inputWidth, inputHeight);
 
@@ -295,7 +303,7 @@ public class FXMLDocumentController implements Initializable {
                 writerImage(P, Q, mScaleWidth, mScaleHeight);
             }
         }
-        
+
         imageView.setImage(writableImage);
 
     }
@@ -351,7 +359,6 @@ public class FXMLDocumentController implements Initializable {
             for (int P = 0; P < width; P++) {
                 candidate = findCandidate(imageOriginal.getWeightedAverage()[P][Q], new File("vectors/vector0.txt"));
                 candidateImg[P][Q] = candidate;
-//                System.out.println(P + " " + Q + " " + "CANDIDATES: " + candidate);
             }
         }
 
@@ -399,8 +406,7 @@ public class FXMLDocumentController implements Initializable {
 
         return Math.sqrt(r + g + b);
     }
-    
-    
+
     @FXML
     private void saveImageJPG() {
         FileChooser fileChooser = new FileChooser();
@@ -412,7 +418,7 @@ public class FXMLDocumentController implements Initializable {
             jpgSaver(writableImage, file);
         }
     }
-    
+
     private void jpgSaver(Image content, File file) {
         BufferedImage bfImage = SwingFXUtils.fromFXImage(content, null);
         BufferedImage bfImage2 = null;
@@ -422,6 +428,21 @@ public class FXMLDocumentController implements Initializable {
             ImageIO.write(bfImage2, "png", file);
         } catch (IOException ex) {
             ex.printStackTrace();
+        }
+    }
+
+    @FXML
+    public void printImage() {
+        final PrinterJob job = PrinterJob.createPrinterJob();
+        if (job != null) {
+            final Printer printer = Printer.getDefaultPrinter();
+            PageLayout pageLayout = job.getJobSettings().getPageLayout();
+            pageLayout = printer.createPageLayout(pageLayout.getPaper(), PageOrientation.LANDSCAPE, Printer.MarginType.DEFAULT);
+            job.getJobSettings().setPageLayout(pageLayout);
+            pageLayout = job.getJobSettings().getPageLayout();
+            if (job.printPage(imageView)) {
+                job.endJob();
+            }
         }
     }
 
