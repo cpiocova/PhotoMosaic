@@ -29,6 +29,14 @@ app.post("/photomosaic", (req, res) => {
   generatePhotomosaic(obj);
 });
 
+app.post("/toprint", (req, res) => {
+  handlePrint();
+});
+
+app.post("/topdf", (req, res) => {
+  handlePdf();
+});
+
 function generatePhotomosaic(info) {
   const { image, mosaicX, mosaicY, imageX, imageY, gcv } = info;
   let { userepo0, userepo1, userepo2, userepo3 } = info;
@@ -65,6 +73,32 @@ function generateCV(n) {
 function downloadRepo(n) {
   child = exec(
     `java -jar ./../../Photomosaic.jar --web download ${n}`,
+    function (error, stdout, stderr) {
+      console.log("stdout: " + stdout);
+      console.log("stderr: " + stderr);
+      if (error !== null) {
+        console.log("exec error: " + error);
+      }
+    }
+  );
+}
+
+function handlePrint() {
+  child = exec(
+    `java -jar ./../../Photomosaic.jar --web print`,
+    function (error, stdout, stderr) {
+      console.log("stdout: " + stdout);
+      console.log("stderr: " + stderr);
+      if (error !== null) {
+        console.log("exec error: " + error);
+      }
+    }
+  );
+}
+
+function handlePdf() {
+  child = exec(
+    `java -jar ./../../Photomosaic.jar --web pdf`,
     function (error, stdout, stderr) {
       console.log("stdout: " + stdout);
       console.log("stderr: " + stderr);

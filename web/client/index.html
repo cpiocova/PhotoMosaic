@@ -9,9 +9,7 @@
 				margin: 0;
 				box-sizing: border-box;
 			}
-			.container {
-			}
-			.title {
+			.title, h2, h3 {
 				text-align: center;
 			}
 			.content {
@@ -44,6 +42,8 @@
 	<body>
 	<div class="container">
 		<h1 class="title">Photomosaic</h1>
+		<h2>Digital Image Processing</h2>
+		<h3>José Pio Montilva & Giselt Parra</h3>
 		<div class="content">
 			<div class="row row1">
 				<div class="col col11">
@@ -91,12 +91,6 @@
 						<label class="label-actions">
 							<button type="button" class="margin-input">Save image</button>
 						</label>
-						<label class="label-actions">
-							<button type="button" class="margin-input">To print</button>
-						</label>
-						<label class="label-actions">
-							<button type="button" class="margin-input">To PDF</button>
-						</label>
 						<legend>Select repositories</legend>
 						<label class="label-actions">
 							<input name="userepo0" type="checkbox" checked onchange="changeCheck(event)" value="true" />Animals
@@ -116,7 +110,7 @@
 						</label>
 						<legend>Image Size</legend>
 						<label class="label-actions">
-							<input value="500" type="number" id="imageX" name="imageX" min="1" max="10000"> x <input value="500" type="number" id="imageY" name="imageY" min="1" max="10000">
+							<input value="640" type="number" id="imageX" name="imageX" min="1" max="10000"> x <input value="360" type="number" id="imageY" name="imageY" min="1" max="10000">
 						</label>
 						<legend>Select criteria</legend>
 						<label class="label-generate-repo">
@@ -136,7 +130,7 @@
 
 	<script>
 	var loadFile = function(event) {
-		var input = event.target;
+		var input = event.currentTarget;
 
 		var reader = new FileReader();
 		reader.onload = function(){
