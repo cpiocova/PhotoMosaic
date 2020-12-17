@@ -97,134 +97,31 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private void generateCVAnimals(ActionEvent event) {
         File directory = new File("repositories/repository0");
-        VectorsCriteria1(directory, 0);
-        VectorsCriteria2(directory, 0);
+        Console.VectorsCriteria1(directory, 0);
+        Console.VectorsCriteria2(directory, 0);
     }
 
     @FXML
     private void generateCVMountains(ActionEvent event) {
         File directory = new File("repositories/repository1");
-        VectorsCriteria1(directory, 1);
-        VectorsCriteria2(directory, 1);
+        Console.VectorsCriteria1(directory, 1);
+        Console.VectorsCriteria2(directory, 1);
     }
 
     @FXML
     private void generateCVMovies(ActionEvent event) {
         File directory = new File("repositories/repository2");
-        VectorsCriteria1(directory, 2);
-        VectorsCriteria2(directory, 2);
+        Console.VectorsCriteria1(directory, 2);
+        Console.VectorsCriteria2(directory, 2);
     }
 
     @FXML
     private void generateCVCars(ActionEvent event) {
         File directory = new File("repositories/repository3");
-        VectorsCriteria1(directory, 3);
-        VectorsCriteria2(directory, 3);
+        Console.VectorsCriteria1(directory, 3);
+        Console.VectorsCriteria2(directory, 3);
     }
 
-    private void VectorsCriteria1(File directory, int index) {
-        try {
-            int fileCount = directory.list().length;
-            PrintWriter outFile = null;
-            File cvFile = new File("vectors/criteria0/vector" + index + ".txt");
-            cvFile.getParentFile().mkdirs();
-            cvFile.createNewFile();
-            try {
-                outFile = new PrintWriter(cvFile);
-            } catch (FileNotFoundException ex) {
-                Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            int id = 0;
-            for (int i = 0; i < fileCount; i++) {
-
-                double r = 0, g = 0, b = 0;
-
-                Image image = new Image("file:" + directory + "/" + i + ".jpg");
-                PixelReader pixelReader = image.getPixelReader();
-
-                double pixelNumber = image.getWidth() * image.getHeight();
-
-                for (int x = 0; x < image.getWidth(); x++) {
-                    for (int y = 0; y < image.getHeight(); y++) {
-                        Color color = pixelReader.getColor(x, y);
-                        r = r + color.getRed();
-                        g = g + color.getGreen();
-                        b = b + color.getBlue();
-                        if (r == Double.NaN || g == Double.NaN || b == Double.NaN) {
-                            break;
-                        }
-                    }
-                }
-
-                r = r / pixelNumber;
-                g = g / pixelNumber;
-                b = b / pixelNumber;
-
-                if (!Double.isNaN(r) && !Double.isNaN(g) && !Double.isNaN(b)) {
-                    outFile.println(index + " " + i + " " + r + " " + g + " " + b);
-                    id++;
-                } else {
-                    id = id < 0 ? 0 : id--;
-                }
-            }
-            outFile.close();
-
-        } catch (IOException ex) {
-            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    private void VectorsCriteria2(File directory, int index) {
-        try {
-            int fileCount = directory.list().length;
-            PrintWriter outFile = null;
-            File cvFile = new File("vectors/criteria1/vector" + index + ".txt");
-            cvFile.getParentFile().mkdirs();
-            cvFile.createNewFile();
-            try {
-                outFile = new PrintWriter(cvFile);
-            } catch (FileNotFoundException ex) {
-                Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            int id = 0;
-            for (int i = 0; i < fileCount; i++) {
-
-                double r = 0, g = 0, b = 0;
-
-                Image image = new Image("file:" + directory + "/" + i + ".jpg");
-                PixelReader pixelReader = image.getPixelReader();
-
-                double pixelNumber = image.getWidth() * image.getHeight();
-
-                for (int x = 0; x < image.getWidth(); x++) {
-                    for (int y = 0; y < image.getHeight(); y++) {
-                        Color color = pixelReader.getColor(x, y);
-                        r = r + color.getRed();
-                        g = g + color.getGreen();
-                        b = b + color.getBlue();
-                        if (r == Double.NaN || g == Double.NaN || b == Double.NaN) {
-                            break;
-                        }
-                    }
-                }
-
-                r = r / pixelNumber;
-                g = g / pixelNumber;
-                b = b / pixelNumber;
-
-                if (!Double.isNaN(r) && !Double.isNaN(g) && !Double.isNaN(b)) {
-                    outFile.println(index + " " + i + " " + r + " " + g + " " + b);
-                    id++;
-                } else {
-                    id = id < 0 ? 0 : id--;
-                }
-            }
-            outFile.close();
-
-        } catch (IOException ex) {
-            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
 
     @FXML
     private void imageChooser(ActionEvent event) {

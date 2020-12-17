@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Photomosaic | Jose Pio Montilva & Giselt Parra</title>
+		<style>
+			html, body {
+				margin: 0;
+				box-sizing: border-box;
+			}
+			.container {
+			}
+			.title {
+				text-align: center;
+			}
+			.content {
+				position: relative;
+				margin-top: 100px;
+				width: 650px;
+				margin: 0 auto;
+			}
+			.row {
+				display: flex;
+
+			}
+			.col {
+				border: 1px solid black;
+			}
+			.margin-input {
+				margin: 2px;
+			}
+			.label-generate-repo, .label-actions {
+				display: block;
+			}
+			legend {
+				color: blue;
+			}
+			.image-container {
+				margin-top: 10px;
+			}
+		</style>
+	</head>
+	<body>
+	<div class="container">
+		<h1 class="title">Photomosaic</h1>
+		<div class="content">
+			<div class="row row1">
+				<div class="col col11">
+					<form method="post" action="/download-repo">
+							<legend>Generate repository</legend>
+							<label class="label-generate-repo">
+								<input type="radio" name="repo" value="0"> Animals
+							</label>
+							<label class="label-generate-repo">
+								<input type="radio" name="repo" value="1"> Mountains
+							</label>
+							<label class="label-generate-repo">
+								<input type="radio" name="repo" value="2"> Movies
+							</label>
+							<label class="label-generate-repo">
+								<input type="radio" name="repo" value="3"> Cars
+							</label>
+							<button type="submit">Download images</button>
+					</form>
+				</div>
+				<div class="col col21">
+					<form method="post" action="/generate-cv">
+						<legend>Generate characteristic vectors</legend>
+						<label class="label-generate-repo">
+							<input type="radio" name="gcv" value="0"> Animals
+						</label>
+						<label class="label-generate-repo">
+							<input type="radio" name="gcv" value="1"> Mountains
+						</label>
+						<label class="label-generate-repo">
+							<input type="radio" name="gcv" value="2"> Movies
+						</label>
+						<label class="label-generate-repo">
+							<input type="radio" name="gcv" value="3"> Cars
+						</label>
+						<button type="submit">Generate characteristic vectors</button>
+					</form>
+				</div>
+				<div class="col col12">
+					<form method="post" action="/photomosaic">
+						<legend>Select image to convert</legend>
+						<label class="label-actions">
+							<input required type="file"  accept="image/jpg" name="image" onchange="loadFile(event)">
+						</label>
+						<label class="label-actions">
+							<button type="button" class="margin-input">Save image</button>
+						</label>
+						<label class="label-actions">
+							<button type="button" class="margin-input">To print</button>
+						</label>
+						<label class="label-actions">
+							<button type="button" class="margin-input">To PDF</button>
+						</label>
+						<legend>Select repositories</legend>
+						<label class="label-actions">
+							<input name="userepo0" type="checkbox" checked onchange="changeCheck(event)" value="true" />Animals
+						</label>
+						<label class="label-actions">
+							<input name="userepo1" type="checkbox" onchange="changeCheck(event)" value="false" />Mountains
+						</label>
+						<label class="label-actions">
+							<input name="userepo2" type="checkbox" onchange="changeCheck(event)" value="false" />Movies
+						</label>
+						<label class="label-actions">
+							<input name="userepo3" type="checkbox" onchange="changeCheck(event)" value="false" />Cars
+						</label>
+						<legend>Mosaic Size</legend>
+						<label class="label-actions">
+							<input value="10" type="number" id="mosaicX" name="mosaicX" min="1" max="10000"> x <input value="10" type="number" id="mosaicY" name="mosaicY" min="1" max="10000">
+						</label>
+						<legend>Image Size</legend>
+						<label class="label-actions">
+							<input value="500" type="number" id="imageX" name="imageX" min="1" max="10000"> x <input value="500" type="number" id="imageY" name="imageY" min="1" max="10000">
+						</label>
+						<legend>Select criteria</legend>
+						<label class="label-generate-repo">
+							<input checked type="radio" name="gcv" value="0"> Criteria 1
+						</label>
+						<label class="label-generate-repo">
+							<input type="radio" name="gcv" value="1"> Criteria 2
+						</label>
+						<button type="submit">Generate photomosaic</button>
+					</form>
+				</div>
+			</div>
+			<div class="image-container">
+				<img class="image-content" id="output" />
+			</div>
+	</div>   
+
+	<script>
+	var loadFile = function(event) {
+		var input = event.target;
+
+		var reader = new FileReader();
+		reader.onload = function(){
+			var dataURL = reader.result;
+			var output = document.getElementById('output');
+			output.src = dataURL;
+		};
+		reader.readAsDataURL(input.files[0]);
+	};
+
+	var changeCheck = function(event) {
+		var input = event.currentTarget;
+		input.value = !!input.checked
+	}
+	</script>
+	</body>
+</html>

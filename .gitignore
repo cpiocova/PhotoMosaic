@@ -1,1 +1,6 @@
 repositories/*
+
+web/node_modules
+web/repositories
+
+dist
