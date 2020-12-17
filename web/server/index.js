@@ -40,8 +40,6 @@ function generatePhotomosaic(info) {
 
   const prompt = `java -jar ./../../Photomosaic.jar --web mosaic ${image} ${userepo0} ${userepo1} ${userepo2} ${userepo3} ${mosaicX} ${mosaicY} ${imageX} ${imageY} ${gcv}`;
 
-  console.log(prompt);
-
   child = exec(prompt, function (error, stdout, stderr) {
     console.log("stdout: " + stdout);
     console.log("stderr: " + stderr);
