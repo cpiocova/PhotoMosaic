@@ -52,7 +52,8 @@ public class Console {
             case "vector":
                 int radioCV = Integer.parseInt(args[2]);
                 File alternative = new File("repositories/repository" + args[2]);
-                File directory = alternative.exists() ? alternative : new File("C:\\Users\\thecnomacVZLA\\Documents\\NetBeansProjects\\Photomosaic\\repositories\\repository" + args[2]);
+//                File directory = alternative.exists() ? alternative : new File("C:\\Users\\thecnomacVZLA\\Documents\\NetBeansProjects\\Photomosaic\\repositories\\repository" + args[2]);
+                File directory = alternative.exists() ? alternative : new File("./../../repositories/repository" + args[2]);
                 VectorsCriteria1(directory, radioCV);
                 VectorsCriteria2(directory, radioCV);
                 break;
@@ -65,6 +66,7 @@ public class Console {
                 int criteria = Integer.parseInt(args[11]);
                 
                 generatePhotoMosaic(imagePath, enableRepo, mosaicSize, imageSize, criteria);
+                saveImageJPG();
                 break;
                 
             case "print": 
@@ -77,8 +79,8 @@ public class Console {
     }
     
       private void generatePhotoMosaic(String imagePath, boolean[] enableRepo, int[] mosaicSize, int[] imageSize, int criteria) {
-//        File img = new File(imagePath);
-        String pathAbs = "C:\\Users\\thecnomacVZLA\\Documents\\NetBeansProjects\\Photomosaic\\" + imagePath;
+//        String pathAbs = "C:\\Users\\thecnomacVZLA\\Documents\\NetBeansProjects\\Photomosaic\\" + imagePath;
+        String pathAbs = "./../../" + imagePath;
         Image imageLoaded = new Image("file:" + pathAbs);
         System.out.println(imagePath);
         imageOriginal.setCurrentImage(imageLoaded);
@@ -96,7 +98,6 @@ public class Console {
         }
         calculateCandidates(width, height, enableRepo, criteria);
         calculateImage(mosaicSize, imageSize);
-        saveImageJPG();
       }
       
     private void calculateImage(int[] mosaicSize, int[] imageSize) {
@@ -134,8 +135,8 @@ public class Console {
         int photoIndex = candidates.getPhotoIndex();
         int fileIndex = candidates.getFileIndex();
         
-        String imagePath = "C:\\Users\\thecnomacVZLA\\Documents\\NetBeansProjects\\Photomosaic\\repositories\\repository" + fileIndex + "/" + photoIndex + ".jpg";
-//        Image imageCandidate = new Image("file:" + "repositories/repository" + fileIndex + "/" + photoIndex + ".jpg");
+//        String imagePath = "C:\\Users\\thecnomacVZLA\\Documents\\NetBeansProjects\\Photomosaic\\repositories\\repository" + fileIndex + "/" + photoIndex + ".jpg";
+        String imagePath = "./../../repositories/repository" + fileIndex + "/" + photoIndex + ".jpg";
         Image imageCandidate = new Image("file:" + imagePath);
         Image scaled = scaleImage(imageCandidate, m, n);
         PixelReader pixelReader = scaled.getPixelReader();
@@ -230,7 +231,8 @@ public class Console {
         for (int i = 0; i < enableRepo.length; i++) {
             if (enableRepo[i]) {
                 File alternative = new File("vectors/criteria" + criteria + "/vector" + i + ".txt");
-                File file = alternative.exists() ? alternative : new File("C:\\Users\\thecnomacVZLA\\Documents\\NetBeansProjects\\Photomosaic\\vectors\\criteria" + criteria + "/vector" + i + ".txt");
+//                File file = alternative.exists() ? alternative : new File("C:\\Users\\thecnomacVZLA\\Documents\\NetBeansProjects\\Photomosaic\\vectors\\criteria" + criteria + "/vector" + i + ".txt");
+                File file = alternative.exists() ? alternative : new File("./../../vectors/criteria" + criteria + "/vector" + i + ".txt");
                 try {
                     scan = new Scanner(file);
                     if (scan.hasNextDouble() && min == -1) {
@@ -377,18 +379,16 @@ public class Console {
     
     private void saveImageJPG() {
         File file = new File("mosaic00.jpg");
-        jpgSaver(writableImage, file);
-    }
-    
-        private void jpgSaver(Image content, File file) {
-            BufferedImage bfImage = SwingFXUtils.fromFXImage(content, null);
-            BufferedImage bfImage2 = null;
-            bfImage2 = new BufferedImage(bfImage.getWidth(), bfImage.getHeight(), BufferedImage.TYPE_INT_RGB);
-            bfImage2.getGraphics().drawImage(bfImage, 0, 0, null);
+        BufferedImage bfImage = SwingFXUtils.fromFXImage(writableImage, null);
+        BufferedImage bfImage2 = null;
+        bfImage2 = new BufferedImage(bfImage.getWidth(), bfImage.getHeight(), BufferedImage.TYPE_INT_RGB);
+        bfImage2.getGraphics().drawImage(bfImage, 0, 0, null);
         try {
-            ImageIO.write(bfImage2, "png", file);
+            ImageIO.write(bfImage2, "jpg", file);
         } catch (IOException ex) {
             ex.printStackTrace();
         }
     }
+    
+  
 }

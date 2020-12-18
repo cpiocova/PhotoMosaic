@@ -88,9 +88,6 @@
 						<label class="label-actions">
 							<input required type="file"  accept="image/jpg" name="image" onchange="loadFile(event)">
 						</label>
-						<label class="label-actions">
-							<button type="button" class="margin-input">Save image</button>
-						</label>
 						<legend>Select repositories</legend>
 						<label class="label-actions">
 							<input name="userepo0" type="checkbox" checked onchange="changeCheck(event)" value="true" />Animals
@@ -129,17 +126,17 @@
 	</div>   
 
 	<script>
-	var loadFile = function(event) {
-		var input = event.currentTarget;
+	// var loadFile = function(event) {
+	// 	var input = event.currentTarget;
 
-		var reader = new FileReader();
-		reader.onload = function(){
-			var dataURL = reader.result;
-			var output = document.getElementById('output');
-			output.src = dataURL;
-		};
-		reader.readAsDataURL(input.files[0]);
-	};
+	// 	var reader = new FileReader();
+	// 	reader.onload = function(){
+	// 		var dataURL = reader.result;
+	// 		var output = document.getElementById('output');
+	// 		output.src = dataURL;
+	// 	};
+	// 	reader.readAsDataURL(input.files[0]);
+	// };
 
 	var changeCheck = function(event) {
 		var input = event.currentTarget;

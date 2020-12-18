@@ -135,8 +135,27 @@ public class FXMLDocumentController implements Initializable {
             imageView.setImage(imageLoaded);
             returnHeight.setText("" + (int) imageLoaded.getHeight());
             returnWidth.setText("" + (int) imageLoaded.getWidth());
+            fillWritable();
 
         }
+    }
+    
+    private void fillWritable() {
+        Image imageLoaded = imageOriginal.getCurrentImage();
+        PixelReader pixelRead = imageLoaded.getPixelReader();
+        int width = (int) imageLoaded.getWidth();
+        int height = (int) imageLoaded.getHeight();
+        writableImage = new WritableImage(width , height);
+        PixelWriter pixelWrite = writableImage.getPixelWriter();
+        
+        for(int y=0; y< height; y++) {
+            for(int x = 0; x< width; x++) {
+                Color color = pixelRead.getColor(x, y);
+                pixelWrite.setColor(x, y, color);
+            }
+        }
+
+        
     }
 
     public boolean isNumeric(String strNum) {
@@ -392,7 +411,7 @@ public class FXMLDocumentController implements Initializable {
         bfImage2 = new BufferedImage(bfImage.getWidth(), bfImage.getHeight(), BufferedImage.TYPE_INT_RGB);
         bfImage2.getGraphics().drawImage(bfImage, 0, 0, null);
         try {
-            ImageIO.write(bfImage2, "png", file);
+            ImageIO.write(bfImage2, "jpg", file);
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -413,6 +432,9 @@ public class FXMLDocumentController implements Initializable {
         }
     }
 
+
+    
+    
     @FXML
     private void handleToPDF(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
@@ -420,15 +442,29 @@ public class FXMLDocumentController implements Initializable {
         fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("PDF", "*.pdf"));
         File file = fileChooser.showSaveDialog(null);
 
+        File fileImg = new File("uploads/mosaic00.jpg");
+        BufferedImage bfImage = SwingFXUtils.fromFXImage(writableImage, null);
+        BufferedImage bfImage2 = null;
+        bfImage2 = new BufferedImage(bfImage.getWidth(), bfImage.getHeight(), BufferedImage.TYPE_INT_RGB);
+        bfImage2.getGraphics().drawImage(bfImage, 0, 0, null);
+        try {
+            ImageIO.write(bfImage2, "jpg", fileImg);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        
+
         try {
             PDDocument doc = new PDDocument();
             PDPage page = new PDPage();
 
-            String imagePath = "repositories/repository0/1.jpg";
-
+                
+            String imagePath = "uploads/mosaic00.jpg";
             String fileName = file.getAbsolutePath();
 
             doc.addPage(page);
+            
+
 
             PDImageXObject img = PDImageXObject.createFromFile(imagePath, doc);
             PDPageContentStream content = new PDPageContentStream(doc, page);
